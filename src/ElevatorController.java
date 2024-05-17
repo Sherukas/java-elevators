@@ -50,12 +50,14 @@ public class ElevatorController {
             if (!requestBuffer.isEmpty()) {
                 for (int i = 0; i < requestBuffer.size(); ++i) {
                     ElevatorRequest request = requestBuffer.take();
+                    System.out.print("Created request: " + request + "\n");
                     floorBuffers[request.getStartFloor() - 1].add(request);
                     Elevator needElevator = selectOptimalElevator(request);
                     if (needElevator != null) {
                         needElevator.addRequest(request.getStartFloor(), request.getPassengerId(), ElementQueue.Purpose.Take);
                     }
                 }
+                System.out.print("\n");
             }
 
             // Update each elevator's state
@@ -194,7 +196,7 @@ public class ElevatorController {
         System.out.println("\nElevator Visualization:");
         System.out.print("Floors        Elevators    People_on_the_floors");
         for (int i = 0; i < liftList.size(); ++i)
-            System.out.printf("    id_of_people_in_%d_elevator", i);
+            System.out.printf("    id_of_people_in_%d_elevator(and_where_is_he_going)", i);
         System.out.println();
         for (int i = totalFloors; i >= 1; i--) {
             System.out.printf("Floor %2d:     ", i);
@@ -218,10 +220,10 @@ public class ElevatorController {
                     StringBuilder peopleInElevator = new StringBuilder();
                     for (ElementQueue request : elevator.getTaskQueue().getQueue()) {
                         if (request.getPurpose() == ElementQueue.Purpose.Deliver) {
-                            peopleInElevator.append(request.getIdPerson()).append(" ");
+                            peopleInElevator.append(request.getIdPerson()).append("(" + request.getFloor() + ")").append(" ");
                         }
                     }
-                    System.out.printf("%-30s", peopleInElevator);
+                    System.out.printf("%-53s", peopleInElevator);
                 }
             }
 
